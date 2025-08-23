@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-headless
+  namepace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+spec:
+  clusterIP: None
+  selector:
+    component: mongodb
+    project: roboshop
+    tier: database
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetport: 27017
+---
+apiVesion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+spec:
+  selector:
+    componenet: mongodb
+    project: roboshop
+    tier: database
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      component: mongodb
+      project: roboshop
+      tier: database
+  serviceName: mongodb-headless
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        component: mongodb
+        project: roboshop
+        tier: database
+    spec:
+      containers:
+        - name: mongodb
+          image: satishbandi33/mongodb:v1
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+# This is nothing but PVC, you can directly create here
+volumeCliamTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "roboshop-ebs"
+      resources:
+        requests:
+          storage: 5Gi

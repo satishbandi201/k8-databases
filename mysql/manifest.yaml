@@ -14,7 +14,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-headless
-  namepace: roboshop
+  namespace: roboshop
   labels:
     component: mysql
     project: roboshop
@@ -30,7 +30,7 @@ spec:
       port: 3306 # service port
       targetport: 3306 # container port
 ---
-apiVesion: v1
+apiVersion: v1
 kind: Service
 metadata:
   name: mysql
@@ -41,7 +41,7 @@ metadata:
     tier: database
 spec:
   selector:
-    componenet: mysql
+    component: mysql
     project: roboshop
     tier: database
   ports:
@@ -83,7 +83,7 @@ spec:
             - name: mysql-data
               mountPath: /var/lib/mysql
 # This is nothing but PVC, you can directly create here
-volumeCliamTemplates:
+volumeClaimTemplates:
   - metadata:
       name: mysql-data
     spec:

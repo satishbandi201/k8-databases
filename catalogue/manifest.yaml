@@ -16,17 +16,20 @@ kind: Deployment
 metadata:
   name: catalogue
   namespace: roboshop
+  # deployment labels
   labels:
     component: catalogue
     project: roboshop
     tier: app
 spec:
-  replicas: 2
+  replicas: 1
+  # These are the labels replica set use to create pod replicas, this should match pod labels
   selector:
     matchLabels:
       component: catalogue
       project: roboshop
       tier: app
+  # This is pod definition
   template:
     metadata:
       labels:
@@ -45,8 +48,8 @@ spec:
             cpu: "100m"
             memory: "256Mi"
         envFrom:
-          - configMapRef:
-              name: catalogue
+        - configMapRef:
+            name: catalogue
 ---
 apiVersion: v1
 kind: Service
@@ -63,16 +66,16 @@ spec:
     project: roboshop
     tier: app
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+  - protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: catalogue
   namespace: roboshop
-spec: 
+spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
@@ -80,9 +83,9 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 10
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 10

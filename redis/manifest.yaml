@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-headless
-  namepace: roboshop
+  namespace: roboshop
   labels:
     component: redis
     project: roboshop

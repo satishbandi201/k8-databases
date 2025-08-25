@@ -29,7 +29,7 @@ metadata:
     tier: database
 spec:
   selector:
-    componenet: redis
+    component: redis
     project: roboshop
     tier: database
   ports:
@@ -68,7 +68,7 @@ spec:
             - name: mongodb-data
               mountPath: /data
 # This is nothing but PVC, you can directly create here
-volumeCliamTemplates:
+volumeClaimTemplates:
   - metadata:
       name: redis-data
     spec:
